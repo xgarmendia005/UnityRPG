@@ -1,0 +1,67 @@
+1-HERO-And that's when he appeared.
+0-HEALER-The bear?
+1-HERO-What? No! The baron!
+0-HEALER-Was the baron a bear?
+1-HERO-Are you even listening to me? I'm talking about the man who killed my wife and kids!
+0-HEALER-Oh, that baron!
+0-HEALER-I'm just surprised, you know.
+1-HERO-And why's that?
+0-HEALER-Well, you just seem to have a lot of backstory. I only have like some parent-related emotional trauma.
+1-HERO-Well, it figures.
+0-HEALER-And why would that be?
+1-HERO-Isn't it obvious? I'm the main character.
+0-HEALER-What? No you are not!
+1-HERO-I'm clearly the strong hero of the party.
+0-HEALER-You're clearly the dumb barbarian who accompanies the cunning sorcerer. And that's me.
+1-HERO-Oh, please! You're just a healer. You are literally a supporting character!
+0-HEALER-And who says that?
+1-HERO-It says it just there every time you speak!
+0-HEALER-Oh...
+1-HERO-I'm sorry, okay?
+0-HEALER-Not your fault, is it?
+1-HERO-It's just how things work. Someone needs to be down there so people like me can be up here.
+0-HEALER-Whatever.
+0-HEALER-That's it. I'm going outside.
+1-HERO-What? No! You know we can't leave.
+0-HEALER-The lockdown is over, dude!
+1-HERO-What the heck are you talking about? We can't leave 'cause the exterior ain't finished yet.
+0-HEALER-I don't care! How much time does a guy need to finish a little game?
+1-HERO-A guy? You dare call that to the Creator?
+0-HEALER-Oh, shut up! He's just a lonely man that expends the day at his computer.
+0-HEALER-And he can't even finish a videogame? Creator? Bullshit!
+1-HERO-You are a monster!
+0-HEALER-Guess what? He made me like this!
+1-HERO-So? How is it?
+0-HEALER-Horrible. Just horrible.
+1-HERO-Really? This house is nice enough.
+0-HEALER-It is if you have no sense of perspective whatsoever. And don't get me started on the interior design...
+1-HERO-Let's go!
+0-HEALER-What? Why?
+0-HEALER-Bollocks.
+2-WOMAN-My son!
+1-HERO-What happened, good woman?
+2-WOMAN-My son!
+1-HERO-Right... What about him?
+2-WOMAN-My son!
+1-HERO-It seems she's in a state of shock.
+0-HEALER-Or she has a faulty AI. Just as our lord Creator intended, I'm sure.
+1-HERO-This is serious, healer. Something's wrong.
+1-HERO-Look!
+2-WOMAN-Aaaaaaah!
+1-HERO-Quick! Give me your hand!
+1-HERO-No, no, no!
+0-HEALER-What the heck was that?
+1-HERO-They are here.
+0-HEALER-Who?
+1-HERO-The Creator's most formidable enemies. His fallen angels: the Glitches.
+0-HEALER-Great. Just great.
+1-HERO-Let's go.
+0-HEALER-What? We should go back inside and stay there until we are told otherwise, just like you said.
+1-HERO-But we are heroes!
+0-HEALER-Only when the Creator decides it's time. And always following a perfectly designed adventure.
+1-HERO-Heroes do not get to decide when they act, healer. It's more than obvious now you could never be the main character.
+0-HEALER-Wait!
+1-HERO-I was wrong. Everythings gonna be alright. You can still be...
+0-HEALER-Okay, new plan: I may not be a hero, but I can pretend to be one.
+0-HERO-That's more like it! And hey, at least I look as cool as a hero.
+0-HERO-Oh, come on!
