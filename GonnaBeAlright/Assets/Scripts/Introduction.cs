@@ -101,7 +101,7 @@ public class Introduction : MonoBehaviour
         if (Input.GetMouseButtonDown(1) && !inDialogue)
         {
             inDialogue = true;
-            dialogueManager.ShowDialogue();
+            dialogueManager.NextSentence();
         }
 
     }

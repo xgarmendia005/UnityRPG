@@ -6,27 +6,57 @@ using UnityEngine.UI;
 public class Dialogue : MonoBehaviour
 {
     public TextAsset textFile;
-    public int currentSpeaker;
+    public int currentSide;
     private string[] sentences;
     private string[] currentSentence;
-
-    public GameObject dialogueBox;
-    public Text nameDisplay;
-    public Text textDisplay;
+    
+    private Text nameDisplay;
+    private Text textDisplay;
     public int index;
     public float typingSpeed;
+
+    public GameObject dialogueContainer;
+    private RectTransform containerTrans;
+    public GameObject dialogueBoxPrefab;
+    private GameObject dialogueBox;
+    private ScrollRect scroll;
 
     private void Start()
     {
         sentences = textFile.text.Split('\n');
+
+ 
+
+        containerTrans = dialogueContainer.GetComponent<RectTransform>();
+        scroll = GetComponent<ScrollRect>();
+        containerTrans.sizeDelta = new Vector2(containerTrans.sizeDelta.x, containerTrans.sizeDelta.y + 200);
+
+        dialogueBox = Instantiate(dialogueBoxPrefab);
+        dialogueBox.transform.SetParent(dialogueContainer.transform);
+       
+        nameDisplay = dialogueBox.transform.GetChild(0).GetComponent<Text>();
+        textDisplay = dialogueBox.transform.GetChild(1).GetComponent<Text>();
+
+
+        scroll.verticalNormalizedPosition = 0;
+
         StartCoroutine(Type());
     }
 
     IEnumerator Type()
     {
-        currentSentence = sentences[index].Split('-');
+        currentSentence = sentences[index].Split('/');
 
-        currentSpeaker = int.Parse(currentSentence[0]);
+        currentSide = int.Parse(currentSentence[0]);
+        if (currentSide == 0)
+        {
+            dialogueBox.GetComponent<RectTransform>().localPosition = new Vector2(-50, -containerTrans.sizeDelta.y / 2 + 50);
+        }
+        else
+        {
+            dialogueBox.GetComponent<RectTransform>().localPosition = new Vector2(50, -containerTrans.sizeDelta.y / 2 + 50);
+        }
+        
 
         nameDisplay.text = currentSentence[1];
 
@@ -39,32 +69,34 @@ public class Dialogue : MonoBehaviour
 
     public void NextSentence ()
     {
-        if (textDisplay.text == currentSentence[2])
-        {
-            if (index < sentences.Length - 1)
-            {
-                index++;
-                textDisplay.text = "";
-                StartCoroutine(Type());
-            }
-            else
-            {
-                textDisplay.text = "";
-            }
-        }
+            index++;
+            StartCoroutine(Type());
     }
 
     public void HideDialogue ()
     {
         if (textDisplay.text == currentSentence[2])
         {
-            dialogueBox.SetActive(false);
         } 
     }
 
-    public void ShowDialogue ()
+    private void Update()
     {
-        NextSentence();
-        dialogueBox.SetActive(true);
+        if (Input.GetMouseButtonDown(0) && textDisplay.text == currentSentence[2])
+        {
+            containerTrans.sizeDelta = new Vector2(containerTrans.sizeDelta.x, containerTrans.sizeDelta.y + 200);
+
+            dialogueBox = Instantiate(dialogueBoxPrefab);
+            dialogueBox.transform.SetParent(dialogueContainer.transform);
+            dialogueBox.GetComponent<RectTransform>().localPosition = new Vector2(0, -containerTrans.sizeDelta.y / 2 + 50);
+
+            nameDisplay = dialogueBox.transform.GetChild(0).GetComponent<Text>();
+            textDisplay = dialogueBox.transform.GetChild(1).GetComponent<Text>();
+
+            scroll.verticalNormalizedPosition = 0;
+
+            NextSentence();
+        }
     }
+
 }
