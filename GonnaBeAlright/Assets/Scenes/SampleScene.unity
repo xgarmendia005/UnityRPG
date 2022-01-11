@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -457,6 +457,7 @@ GameObject:
   - component: {fileID: 350797968}
   - component: {fileID: 350797967}
   - component: {fileID: 350797966}
+  - component: {fileID: 350797970}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -544,6 +545,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &350797970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350797965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42e144a4cbae2ca49ad2228be51cfb0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textFile: {fileID: 4900000, guid: 445efbeb507e9cd408a6b4640da53c80, type: 3}
+  index: 0
+  typingSpeed: 0.02
+  dialogueScroll: {fileID: 1701862845}
+  dialogueContainer: {fileID: 1172596273}
+  dialogueBoxPrefab: {fileID: 5232899589810410958, guid: 6fd45f1fe849d5b4c96c114ff283fe3a,
+    type: 3}
 --- !u!21 &356149958
 Material:
   serializedVersion: 6
@@ -1556,7 +1576,7 @@ Transform:
   m_GameObject: {fileID: 1600639096}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.22, y: -0.37663758, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.56, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -1663,7 +1683,6 @@ GameObject:
   - component: {fileID: 1701862849}
   - component: {fileID: 1701862848}
   - component: {fileID: 1701862847}
-  - component: {fileID: 1701862850}
   m_Layer: 5
   m_Name: DialogueScroll
   m_TagString: Untagged
@@ -1758,25 +1777,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1701862845}
   m_CullTransparentMesh: 0
---- !u!114 &1701862850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1701862845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42e144a4cbae2ca49ad2228be51cfb0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textFile: {fileID: 4900000, guid: 1cd21b74f56472f49bc61ade797ab812, type: 3}
-  currentSide: 0
-  index: 0
-  typingSpeed: 0.02
-  dialogueContainer: {fileID: 1172596273}
-  dialogueBoxPrefab: {fileID: 5232899589810410958, guid: 6fd45f1fe849d5b4c96c114ff283fe3a,
-    type: 3}
 --- !u!21 &1803376662
 Material:
   serializedVersion: 6

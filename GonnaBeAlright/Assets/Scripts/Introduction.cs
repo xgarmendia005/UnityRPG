@@ -6,7 +6,7 @@ public class Introduction : MonoBehaviour
 {
 
     bool inDialogue = true;
-    public Dialogue dialogueManager;
+    public DialogueManager dialogueManager;
 
     public string[] characters;
 

@@ -1,0 +1,5 @@
+1/HERO/And that's when he appeared.
+0/HEALER/The bear?
+1/HERO/What? No! The baron!
+0/HEALER/Was the baron a bear?
+1/HERO/Are you even listening to me? I'm talking about the man who killed my wife and kids!
