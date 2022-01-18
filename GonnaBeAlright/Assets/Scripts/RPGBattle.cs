@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class RPGBattle : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class RPGBattle : MonoBehaviour
     private List<int> enemyIndex;
 
     private int curTarget;
+    public GameObject targetSelector;
 
     private const int BATTLESTART = 0;
     private const int TURNSTART = 1;
@@ -45,59 +48,14 @@ public class RPGBattle : MonoBehaviour
             case TURNSTART:
                 tempChar = characters[orderIndex[curChar]];
                 tempChar.GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 1f);
+                HideTargetSelector();
+                if (tempChar.GetComponent<Stats>().player) CreateTargetSelector();
                 battleState = TARGETSEL;
                 break;
             case TARGETSEL:
-                if (tempChar.GetComponent <Stats>().player){
-                    if (Input.GetKeyDown(KeyCode.Alpha1))
-                    {
-                        curTarget = enemyIndex[0];
-                        if (characters[curTarget].GetComponent<HealthManager>().ModifyHealth(-15))
-                        {
-                            KillCharacter(curTarget);
-                        }
-                        tempChar.GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
-                        curChar++;
-                        battleState = TURNSTART;
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha2))
-                    {
-                        curTarget = enemyIndex[1];
-                        if (characters[curTarget].GetComponent<HealthManager>().ModifyHealth(-15))
-                        {
-                            KillCharacter(curTarget);
-                        }
-                        tempChar.GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
-                        curChar++;
-                        battleState = TURNSTART;
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha3))
-                    {
-                        curTarget = enemyIndex[2];
-                        if (characters[curTarget].GetComponent<HealthManager>().ModifyHealth(-15))
-                        {
-                            KillCharacter(curTarget);
-                        }
-                        tempChar.GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
-                        curChar++;
-                        battleState = TURNSTART;
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha4))
-                    {
-                        curTarget = enemyIndex[3];
-                        if (characters[curTarget].GetComponent<HealthManager>().ModifyHealth(-15))
-                        {
-                            KillCharacter(curTarget);
-                        }
-                        tempChar.GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
-                        curChar++;
-                        battleState = TURNSTART;
-                    }
+                if (!tempChar.GetComponent <Stats>().player){
                     
-                }
-                else
-                {
-                    characters[playerIndex[Random.Range(0, playerIndex.Count)]].GetComponent<HealthManager>().ModifyHealth(-15);
+                    characters[playerIndex[Random.Range(0, playerIndex.Count)]].GetComponent<HealthManager>().ModifyHealth(-15f);
                     tempChar.GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
                     curChar++;
                     battleState = TURNSTART;
@@ -120,12 +78,60 @@ public class RPGBattle : MonoBehaviour
         }
     }
 
-    public void KillCharacter (int i)
+    public void KillCharacter(int i)
     {
         if (orderIndex.IndexOf(curTarget) <= curChar) curChar--;
         orderIndex.Remove(curTarget);
         CalculateIndex();
         characters[curTarget].SetActive(false);
+    }
+
+    public void CreateTargetSelector()
+    {
+        for (int i = 0; i < enemyIndex.Count; i++)
+        {
+            Transform tempButton = targetSelector.transform.GetChild(i);
+            tempButton.GetChild(0).GetComponent<Text>().text = characters[enemyIndex[i]].name;
+            tempButton.gameObject.SetActive(true);
+        }
+        targetSelector.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(targetSelector.transform.GetChild(0).gameObject);
+    }
+
+    public void HideTargetSelector ()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            targetSelector.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        EventSystem.current.SetSelectedGameObject(null);
+        targetSelector.SetActive(false);
+    }
+
+    public void HighlightTarget (int id, bool b)
+    {
+        if (b)
+        {
+            characters[enemyIndex[id]].GetComponent<Renderer>().material.SetColor("_OutlineColor", Color.red);
+            characters[enemyIndex[id]].GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 1f);
+        }
+        else
+        {
+            characters[enemyIndex[id]].GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
+        }
+    }
+
+    public void TargetButton(int id)
+    {
+        curTarget = enemyIndex[id];
+        if (characters[curTarget].GetComponent<HealthManager>().ModifyHealth(-15f))
+        {
+            KillCharacter(curTarget);
+        }
+        characters[curTarget].GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
+        tempChar.GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
+        curChar++;
+        battleState = TURNSTART;
     }
 }
 

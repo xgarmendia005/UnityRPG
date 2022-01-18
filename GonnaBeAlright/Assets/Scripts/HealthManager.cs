@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour
 {
-    public int maxHealth;
-    private int currentHealth;
+    public float maxHealth;
+    private float currentHealth;
+
+    public GameObject healthBar;
+    public Image healthBarImage;
 
     public bool dead = false;
 
@@ -15,14 +19,15 @@ public class HealthManager : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public bool ModifyHealth (int change)
+    public bool ModifyHealth (float change)
     {
         currentHealth += change;
-        print(transform.name + ": " + currentHealth);
+        healthBarImage.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0, 1f);
 
         if (currentHealth <= 0)
         {
             dead = true;
+            healthBar.SetActive(false);
             return true;
         }
 
