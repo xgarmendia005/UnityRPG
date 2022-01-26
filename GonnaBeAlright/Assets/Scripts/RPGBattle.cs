@@ -19,17 +19,27 @@ public class RPGBattle : MonoBehaviour
 
     //Action selector UI
     public GameObject actionSelector;
-    
+    //Current action
+    private RPGAbility curAction;
+
+    //Ability selector UI
+    public GameObject abilitySelector;
+    //Temporal array to store current character's abilities
+    private RPGAbility[] tempAbilities;
+
     //Current target index
     private int curTarget;
     //Target selector UI
     public GameObject targetSelector;
+    //Target selector for targeting allies
+    public GameObject playerTargetSelector;
 
     //Battle states' declaration
     private const int BATTLESTART = 0;
     private const int TURNSTART = 1;
     private const int ACTIONSEL = 2;
-    private const int TARGETSEL = 3;
+    private const int ABILITYSEL = 3;
+    private const int TARGETSEL = 4;
 
     //Current battle state
     public int battleState = BATTLESTART;
@@ -67,12 +77,6 @@ public class RPGBattle : MonoBehaviour
                 else battleState = TARGETSEL;
                 break;
             case ACTIONSEL:
-                /*
-                HideTargetSelector();
-                if (tempChar.GetComponent<Stats>().player)
-                {
-                    CreateTargetSelector();
-                }*/
                 break;
             case TARGETSEL:
                 //If active character is enemy
@@ -137,6 +141,23 @@ public class RPGBattle : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(targetSelector.transform.GetChild(0).gameObject);
     }
 
+    //Create ally target selector UI
+    public void CreatePlayerTargetSelector()
+    {
+        //For each aly in battle
+        for (int i = 0; i < playerIndex.Count; i++)
+        {
+            //Enable button with player's name
+            Transform tempButton = playerTargetSelector.transform.GetChild(i);
+            tempButton.GetChild(0).GetComponent<Text>().text = characters[playerIndex[i]].name;
+            tempButton.gameObject.SetActive(true);
+        }
+        //Enable target selector UI
+        playerTargetSelector.SetActive(true);
+        //Set first button as selected
+        EventSystem.current.SetSelectedGameObject(playerTargetSelector.transform.GetChild(0).gameObject);
+    }
+
     //Hide target selector UI
     public void HideTargetSelector ()
     {
@@ -145,12 +166,35 @@ public class RPGBattle : MonoBehaviour
         {
             //Disable button
             targetSelector.transform.GetChild(i).gameObject.SetActive(false);
+            playerTargetSelector.transform.GetChild(i).gameObject.SetActive(false);
         }
         //Deselect current button
         EventSystem.current.SetSelectedGameObject(null);
         //Disable target selector UI
         targetSelector.SetActive(false);
+        playerTargetSelector.SetActive(false);
     }
+
+
+    //Create ability selector UI
+    public void CreateAbilitySelector()
+    {
+        tempAbilities = tempChar.GetComponent<Stats>().abilities;
+
+        //For each ability of active character
+        for (int i = 0; i < tempAbilities.Length; i++)
+        {
+            //Enable button with ability's name
+            Transform tempButton = abilitySelector.transform.GetChild(0).GetChild(i);
+            tempButton.GetChild(0).GetComponent<Text>().text = tempAbilities[i].name;
+            tempButton.gameObject.SetActive(true);
+        }
+        //Enable target selector UI
+        abilitySelector.SetActive(true);
+        //Set first button as selected
+        EventSystem.current.SetSelectedGameObject(abilitySelector.transform.GetChild(0).GetChild(0).gameObject);
+    }
+
 
     //Take the next step in selected action
     public void ActionButton(int action)
@@ -163,11 +207,27 @@ public class RPGBattle : MonoBehaviour
         {
             case 0:
                 actionSelector.SetActive(false);
+                curAction = new RPGAbility("Attack", 0, -tempChar.GetComponent<Stats>().attack, 0, 0);
                 CreateTargetSelector();
                 battleState = TARGETSEL;
                 break;
+            case 1:
+                actionSelector.SetActive(false);
+                CreateAbilitySelector();
+                battleState = ABILITYSEL;
+                break;
 
         }
+    }
+
+    //Register player's selected ability
+    public void AbilityButton(int ability)
+    {
+        curAction = tempAbilities[ability];
+        abilitySelector.SetActive(false);
+        if (curAction.type == 0) CreateTargetSelector();
+        else if (curAction.type == 1) CreatePlayerTargetSelector();
+        battleState = TARGETSEL;
     }
 
     //Highlight current selected target
@@ -176,15 +236,26 @@ public class RPGBattle : MonoBehaviour
         //If boolean flag is true
         if (b)
         {
-            //Enable red outline to current target
-            characters[enemyIndex[id]].GetComponent<Renderer>().material.SetColor("_OutlineColor", Color.red);
-            characters[enemyIndex[id]].GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 1f);
-        }
+            //Enable red outline to current target if it's an enemy
+            if (curAction.type == 0)
+            {
+                characters[enemyIndex[id]].GetComponent<Renderer>().material.SetColor("_OutlineColor", Color.red);
+                characters[enemyIndex[id]].GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 1f);
+            }
+            //Enable green outline to current target if its an ally
+            else if (curAction.type == 1)
+            {
+                characters[playerIndex[id]].GetComponent<Renderer>().material.SetColor("_OutlineColor", Color.green);
+                characters[playerIndex[id]].GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 1f);
+            }
+
+            }
         //If boolean flag is false
         else
         {
             //Disable outline to current target
-            characters[enemyIndex[id]].GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
+            if (curAction.type == 0) characters[enemyIndex[id]].GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
+            else if (curAction.type == 1) characters[playerIndex[id]].GetComponent<Renderer>().material.SetFloat("_OutlineAlpha", 0f);
         }
     }
 
@@ -192,9 +263,10 @@ public class RPGBattle : MonoBehaviour
     public void TargetButton(int id)
     {
         HideTargetSelector();
-        curTarget = enemyIndex[id];
+        if (curAction.type == 0) curTarget = enemyIndex[id];
+        else if (curAction.type == 1) curTarget = playerIndex[id];
         //Modify target's health and kill if necessary
-        if (characters[curTarget].GetComponent<HealthManager>().ModifyHealth(-15f))
+        if (characters[curTarget].GetComponent<HealthManager>().ModifyHealth(curAction.quantity))
         {
             KillCharacter(curTarget);
         }
