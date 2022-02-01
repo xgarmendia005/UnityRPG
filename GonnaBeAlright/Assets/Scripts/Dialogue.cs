@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Dialogue
 {
+    //Array indicating each interlocutor's position
     public int[] sides;
 
     //Array of interlocutors names

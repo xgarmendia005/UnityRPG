@@ -2,107 +2,119 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Introduction : MonoBehaviour
+public class Introduction : LevelManager
 {
-
-    bool inDialogue = true;
     public DialogueManager dialogueManager;
 
-    public string[] characters;
+    [Header("Triggers")]
+    public GameObject eventTrigger0;
+    public GameObject eventTrigger1;
+    public GameObject eventTrigger2;
+
+    [Header("Characters")]
+    public Transform healer;
+    public Transform originalHero;
+
+    [Header("Props")]
+    public GameObject door;
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && inDialogue)
+        //If game is in dialogue and left mouse button is pressed, type next sentence
+        if (Input.GetMouseButtonDown(0) && dialogueManager.isDialogue && !dialogueManager.dialoguePaused)
         {
-            //Healer gets to door
-            if (dialogueManager.index == 23)
+            //Silence
+            if (dialogueManager.sentenceNum == 18)
             {
                 dialogueManager.HideDialogue();
-                inDialogue = false;
+                StartCoroutine(NarrativeEvent(-1));
             }
-            //Healer leaves house and returns
-            else if(dialogueManager.index == 32)
+            //Silence
+            else if (dialogueManager.sentenceNum == 22)
             {
                 dialogueManager.HideDialogue();
-                inDialogue = false;
+                StartCoroutine(NarrativeEvent(-1));
             }
-            //Scream outside
-            else if (dialogueManager.index == 36)
+            //Healer goes to the door
+            else if (dialogueManager.sentenceNum == 32)
             {
                 dialogueManager.HideDialogue();
-                inDialogue = false;
+                Flip(healer);
+                healer.GetComponent<Rigidbody2D>().velocity = new Vector2(-1.5f, 0f);
             }
-            //Hero leaves house
-            else if (dialogueManager.index == 38)
+            //Yelling outside of the house
+            else if (dialogueManager.sentenceNum == 36)
             {
                 dialogueManager.HideDialogue();
-                inDialogue = false;
+                StartCoroutine(NarrativeEvent(-1));
             }
-            //Healer leaves house
-            else if (dialogueManager.index == 39)
+            //Original hero goes to the door
+            else if (dialogueManager.sentenceNum == 38)
             {
                 dialogueManager.HideDialogue();
-                inDialogue = false;
+                originalHero.GetComponent<Rigidbody2D>().velocity = new Vector2(-3f, 0f);
             }
-            //Healer approaches hero and woman
-            else if (dialogueManager.index == 45)
+            else if (dialogueManager.sentenceNum == 39)
             {
                 dialogueManager.HideDialogue();
-                inDialogue = false;
+                Flip(healer);
+                healer.GetComponent<Rigidbody2D>().velocity = new Vector2(-1.5f, 0f);
             }
-            //Glitch appears
-            else if (dialogueManager.index == 47)
-            {
-                dialogueManager.HideDialogue();
-                inDialogue = false;
-            }
-            //Woman disappears
-            else if (dialogueManager.index == 51)
-            {
-                dialogueManager.HideDialogue();
-                inDialogue = false;
-            }
-            //Hero starts to go away
-            else if (dialogueManager.index == 61)
-            {
-                dialogueManager.HideDialogue();
-                inDialogue = false;
-            }
-            //Short scene: Glitch takes hero, healer runs without thinking
-            else if (dialogueManager.index == 62)
-            {
-                dialogueManager.HideDialogue();
-                inDialogue = false;
-            }
-            //Hero disappears. Dialogue box falls to the ground
-            else if (dialogueManager.index == 63)
-            {
-                dialogueManager.HideDialogue();
-                inDialogue = false;
-            }
-            //Healer takes Hero text from dialogue box and put it in hers
-            else if (dialogueManager.index == 64)
-            {
-                dialogueManager.HideDialogue();
-                inDialogue = false;
-            }
-            //Hero changes
-            else if (dialogueManager.index == 65)
-            {
-                dialogueManager.HideDialogue();
-                inDialogue = false;
-            }
-            else
-            {
-                dialogueManager.NextSentence();
-            }
+            else dialogueManager.NextSentence();
         }
-
-        if (Input.GetMouseButtonDown(1) && !inDialogue)
-        {
-            inDialogue = true;
-            dialogueManager.NextSentence();
-        }
-
     }
+
+    public override IEnumerator NarrativeEvent(int id)
+    {
+        switch (id)
+        {
+            //Door is opened and healer disappears
+            //After some time, healer appears and goes back to starting position
+            case 0:
+                door.SetActive(true);
+                healer.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 0f);
+                healer.gameObject.SetActive(false);
+
+                yield return new WaitForSeconds(4);
+
+                Flip(healer);
+                healer.gameObject.SetActive(true);
+                healer.GetComponent<Rigidbody2D>().velocity = new Vector2(1f, 0f);
+                door.SetActive(false);
+
+                eventTrigger0.SetActive(false);
+                eventTrigger1.SetActive(true);
+                break;
+            //Healer stops and dialogue resumes after some time
+            case 1:
+                healer.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 0f);
+                yield return new WaitForSeconds(2);
+                dialogueManager.ResumeDialogue();
+
+                eventTrigger1.SetActive(false);
+                eventTrigger2.SetActive(true);
+                break;
+            //Original hero goes outside
+            case 2:
+                door.SetActive(true);
+                originalHero.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 0f);
+                originalHero.gameObject.SetActive(false);
+
+                dialogueManager.ResumeDialogue();
+
+                eventTrigger2.SetActive(false);
+                break;
+            //Pause
+            default:
+                yield return new WaitForSeconds(3);
+                dialogueManager.ResumeDialogue();
+                break;
+        }
+    } 
+
+    public void Flip (Transform target)
+    {
+        target.localScale = new Vector2(-target.localScale.x, target.localScale.y);
+    }
+    
 }
